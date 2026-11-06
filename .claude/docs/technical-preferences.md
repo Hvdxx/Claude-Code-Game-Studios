@@ -10,30 +10,30 @@
 
 ## Engine & Language
 
-- **Engine**: Godot 4.7.2
-- **Language**: GDScript
-- **Rendering**: Compatibility (GL Compatibility; required for the web build)
-- **Physics**: Godot Physics 2D
+- **Engine**: Phaser 4.2.1
+- **Language**: JavaScript (ES modules), bundled with Vite
+- **Rendering**: WebGL (Phaser auto-selects; Canvas fallback). Pixel art: `pixelArt: true`
+- **Physics**: Phaser Arcade Physics
 
 ## Input & Platform
 
 <!-- Written by /setup-engine. Read by /ux-design, /ux-review, /test-setup, /team-ui, and /dev-story -->
 <!-- to scope interaction specs, test helpers, and implementation to the correct input methods. -->
 
-- **Target Platforms**: PC, Web
+- **Target Platforms**: Web browser (desktop) first; a downloadable wrapper may come later
 - **Input Methods**: Keyboard, Gamepad
 - **Primary Input**: Keyboard + Gamepad (both first-class)
-- **Gamepad Support**: Partial
-- **Touch Support**: Partial
-- **Platform Notes**: No hover-only interactions. Web build uses the Compatibility renderer, so avoid Forward+-only features.
+- **Gamepad Support**: Partial (browser Gamepad API)
+- **Touch Support**: None for now
+- **Platform Notes**: No hover-only interactions. Browsers block audio until the first click/keypress, so start audio after input. Keep load size small.
 
 ## Naming Conventions
 
 - **Classes**: PascalCase (e.g., `PlayerController`)
-- **Variables**: snake_case (e.g., `move_speed`)
-- **Signals/Events**: snake_case past tense (e.g., `health_changed`)
-- **Files**: snake_case matching class (e.g., `player_controller.gd`)
-- **Scenes/Prefabs**: snake_case matching the file (e.g., `player_controller.tscn`)
+- **Variables**: camelCase (e.g., `moveSpeed`)
+- **Signals/Events**: kebab-case past tense event names (e.g., `'health-changed'`)
+- **Files**: PascalCase for classes/scenes (e.g., `Player.js`, `BattleScene.js`), camelCase for modules (e.g., `upgrades.js`)
+- **Scenes/Prefabs**: PascalCase Phaser Scene classes ending in `Scene`
 - **Constants**: UPPER_SNAKE_CASE (e.g., `MAX_HEALTH`)
 
 ## Performance Budgets
@@ -41,11 +41,11 @@
 - **Target Framerate**: 60 fps
 - **Frame Budget**: 16.6 ms
 - **Draw Calls**: ~500 (starting default for 2D; revisit once target hardware is known)
-- **Memory Ceiling**: 512 MB (web-safe starting default)
+- **Memory Ceiling**: 512 MB (browser tab, starting default)
 
 ## Testing
 
-- **Framework**: gdUnit4
+- **Framework**: Vitest (logic tests); browser screenshots via Playwright for visual checks
 - **Minimum Coverage**: [TO BE CONFIGURED]
 - **Required Tests**: Balance formulas, gameplay systems, networking (if applicable)
 
@@ -70,12 +70,12 @@
 <!-- Read by /code-review, /architecture-decision, /architecture-review, and team skills -->
 <!-- to know which specialist to spawn for engine-specific validation. -->
 
-- **Primary**: godot-specialist
-- **Language/Code Specialist**: godot-gdscript-specialist (all .gd files)
-- **Shader Specialist**: godot-shader-specialist (.gdshader files, VisualShader resources)
-- **UI Specialist**: godot-specialist (no dedicated UI specialist — primary covers all UI)
-- **Additional Specialists**: godot-gdextension-specialist (GDExtension / native C++ bindings only)
-- **Routing Notes**: Invoke primary for architecture decisions, ADR validation, and cross-cutting code review. Invoke GDScript specialist for code quality, signal architecture, static typing enforcement, and GDScript idioms. Invoke shader specialist for material design and shader code. Invoke GDExtension specialist only when native extensions are involved.
+- **Primary**: gameplay-programmer (no Phaser-specific specialist exists)
+- **Language/Code Specialist**: gameplay-programmer (all .js game code)
+- **Shader Specialist**: technical-artist (WebGL effects, particles)
+- **UI Specialist**: ui-programmer (HUD, menus, upgrade picker)
+- **Additional Specialists**: ai-programmer (enemy and boss behavior)
+- **Routing Notes**: Engine is Phaser, which has no dedicated specialist. Use gameplay-programmer for game code, ai-programmer for enemy/boss AI, ui-programmer for UI, technical-artist for visual effects. Check docs/engine-reference/phaser/ before using Phaser 4 APIs.
 
 ### File Extension Routing
 
@@ -84,9 +84,9 @@
 
 | File Extension / Type | Specialist to Spawn |
 |-----------------------|---------------------|
-| Game code (.gd files) | godot-gdscript-specialist |
-| Shader / material files (.gdshader, VisualShader) | godot-shader-specialist |
-| UI / screen files (Control nodes, CanvasLayer) | godot-specialist |
-| Scene / prefab / level files (.tscn, .tres) | godot-specialist |
-| Native extension / plugin files (.gdextension, C++) | godot-gdextension-specialist |
-| General architecture review | Primary |
+| Game code (.js files) | gameplay-programmer |
+| Enemy / boss AI | ai-programmer |
+| Visual effects / particles | technical-artist |
+| UI / HUD / menus | ui-programmer |
+| Scene classes (*Scene.js) | gameplay-programmer |
+| General architecture review | lead-programmer |

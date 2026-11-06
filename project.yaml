@@ -34,31 +34,28 @@ modes:
   automation: collaborative
 
 engine:
-  name: "Godot"
-  version: "4.7.2"
-  language: "GDScript"
-  rendering: "Compatibility"
-  physics: "Godot Physics 2D"
+  name: "Phaser"
+  version: "4.2.1"
+  language: "JavaScript"
+  rendering: "WebGL"
+  physics: "Arcade Physics"
 
 specialists:
-  code: "godot-gdscript-specialist"
-  shader: "godot-shader-specialist"
-  ui: "godot-specialist"
-  additional: ["godot-gdextension-specialist"]
+  code: "gameplay-programmer"
+  shader: "technical-artist"
+  ui: "ui-programmer"
+  additional: ["ai-programmer"]
 
 naming:
   classes: PascalCase
-  variables: snake_case
+  variables: camelCase
   constants: SCREAMING_SNAKE
   signals: past_tense
-  files: snake_case
-  scenes: snake_case
+  files: PascalCase
+  scenes: PascalCase
 
 commands:
-  # TODO: godot is not on PATH here — set the editor's full path via /settings
-  # TODO: build needs a Godot export preset name; none exists yet. Create presets
-  #       (PC + Web) in the editor, then set it via /settings.
-  build: "[TO BE CONFIGURED]"
-  test: "godot --headless -s -d --remote-debug tcp://127.0.0.1:0 res://addons/gdUnit4/bin/GdUnitCmdTool.gd -a res://tests --ignoreHeadlessMode"
-  run: "godot --path . --windowed --resolution 1280x720"
-  smoke: "godot --headless --quit-after 5"
+  build: "npm run build"
+  test: "npm test"
+  run: "npm run dev"
+  smoke: "npm run build"
